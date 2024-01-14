@@ -2,10 +2,12 @@ package de.dbeppler.demo;
 
 import androidx.annotation.MainThread;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -61,6 +63,16 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Sending message: " + message);
             sendString(message);
         } else {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             for (BluetoothDevice device : BluetoothAdapter.getDefaultAdapter().getBondedDevices())
                 if (TARGET_DEVICE_NAME.equals(device.getName())) {
                     Log.d(TAG, "Requesting connection to " + device.getName());
